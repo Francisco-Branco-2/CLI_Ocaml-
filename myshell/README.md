@@ -284,6 +284,4 @@ fecha **todos** os descritores — crítico para que os leitores recebam
 EOF quando o escritor termina.
 
 ---
-
-## Licença
-MIT
+T
