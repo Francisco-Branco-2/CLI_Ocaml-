@@ -1,0 +1,100 @@
+# ~/.myshellrc — ficheiro de configuração do myshell
+# Executado automaticamente ao iniciar o shell.
+# Suporta todas as construções: aliases, funções, export, if, for, etc.
+
+# ==================================================================
+# Variáveis de ambiente
+# ==================================================================
+
+export EDITOR="${EDITOR:-nano}"
+export PAGER="${PAGER:-less}"
+export LESS="-R -F -X"
+
+# Histórico
+export HISTSIZE=2000
+
+# ==================================================================
+# Prompt personalizado (alternativa ao padrão)
+# Descomenta para usar:
+# export PS1='\u@\h:\w\$ '
+# ==================================================================
+
+# ==================================================================
+# Aliases — comandos do dia-a-dia
+# ==================================================================
+
+# Listagem
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+alias la='ls -A'
+alias l='ls -CF'
+alias lt='ls -lath'         # ordenado por data
+
+# Navegação
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Segurança (pede confirmação)
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Git
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate -20'
+alias gd='git diff'
+
+# Utilitários
+alias h='history'
+alias c='clear'
+alias q='exit'
+alias reload='source ~/.myshellrc'
+
+# Rede
+alias myip='curl -s ifconfig.me && echo'
+alias ports='ss -tulpn'
+
+# ==================================================================
+# Funções úteis
+# ==================================================================
+
+# Cria um directório e entra nele
+function mkcd {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Mostra o tamanho de ficheiros/directorias
+function tamanho {
+  du -sh "${1:-.}" 2>/dev/null
+}
+
+# Extrai qualquer arquivo comprimido
+function extrair {
+  if [ -f "$1" ]; then
+    case "$1" in
+      *.tar.gz|*.tgz)  tar xzf "$1"  ;;
+      *.tar.bz2)       tar xjf "$1"  ;;
+      *.tar.xz)        tar xJf "$1"  ;;
+      *.tar)           tar xf  "$1"  ;;
+      *.gz)            gunzip  "$1"  ;;
+      *.zip)           unzip   "$1"  ;;
+      *)  echo "extrair: formato não reconhecido: $1" ;;
+    esac
+  else
+    echo "extrair: ficheiro não encontrado: $1"
+  fi
+}
+
+# Pesquisa recursiva no conteúdo de ficheiros
+function encontrar {
+  grep -r "$1" "${2:-.}"
+}
+
+# Mostra o PATH linha a linha
+function mostrar_path {
+  echo "$PATH" | tr ':' '\n' | sort
+}
