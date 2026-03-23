@@ -1,4 +1,0 @@
-(executable
- (name main)
- (public_name myshell)
- (libraries myshell_lib unix))

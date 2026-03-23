@@ -1,4 +1,0 @@
-(library
- (name myshell_lib)
- (libraries unix str)
- (modules types lexer parser builtins executor history prompt completion readline config))
