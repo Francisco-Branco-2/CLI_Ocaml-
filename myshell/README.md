@@ -8,20 +8,38 @@ scripting, job control, expansões, readline com histórico e tab completion.
 
 ## Arquitectura
 
-```
-Input (string)
-   │
-   ▼
-Lexer.tokenize          lib/lexer.ml
-   │  token list
-   ▼
-Parser.parse            lib/parser.ml
-   │  ast
-   ▼
-Executor.eval           lib/executor.ml
-   │  exit_code
-   ▼
-Output / efeitos colaterais
+```mermaid
+flowchart TD
+    subgraph REPL["🔄  REPL loop"]
+        direction LR
+        A["1. Read\nReadline, histórico"]
+        B["2. Lexer\nTokenização"]
+        C["3. Parser\nAST de comandos"]
+        A --> B --> C
+    end
+    C --> D["4. Expansão\nVariáveis, glob, ~"]
+    D --> E["5. Executor\nfork / exec / wait"]
+    E --> F["Builtins\ncd, export, exit…"]
+    E --> G["Pipes & Redirects\n| > < >>"]
+    E --> H["Job control\nbg, fg, signals"]
+    E --> I["Completions\nTab, ficheiros, cmds"]
+    subgraph ENV["Ambiente"]
+        J["Environment\n$PATH, $HOME…"]
+        K["Scripting\nif, for, funções"]
+    end
+    F -.->|loop| A
+    E --> ENV
+    style A fill:#1a6496,color:#fff,stroke:#1a6496
+    style B fill:#6f42c1,color:#fff,stroke:#6f42c1
+    style C fill:#5a3aa0,color:#fff,stroke:#5a3aa0
+    style D fill:#1d7a5a,color:#fff,stroke:#1d7a5a
+    style E fill:#8b2500,color:#fff,stroke:#8b2500
+    style F fill:#7a5200,color:#fff,stroke:#7a5200
+    style G fill:#1d5a4a,color:#fff,stroke:#1d5a4a
+    style H fill:#1a4a8a,color:#fff,stroke:#1a4a8a
+    style I fill:#4a2a90,color:#fff,stroke:#4a2a90
+    style J fill:#7a2a00,color:#fff,stroke:#7a2a00
+    style K fill:#6a4a00,color:#fff,stroke:#6a4a00
 ```
 
 ### Módulos
